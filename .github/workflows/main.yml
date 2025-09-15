@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check for tickets
-        uses: mooyoul/melon-ticket-actions@v1
+        uses: xltuu/melon-ticket-actions@v1
         with:
           # 아래 3개 값은 멜론티켓 페이지 URL에서 찾을 수 있습니다.
           # 예: https://ticket.melon.com/performance/index.htm?prodId=204755
