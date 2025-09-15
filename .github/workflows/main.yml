@@ -1,22 +1,20 @@
-name: workflow
-on: push
+name: Check Melon Ticket
+on:
+  # 매 5분마다 실행하도록 스케줄 설정
+  schedule:
+    - cron: '*/5 * * * *'
 jobs:
-  job:
+  check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v1
-      - name: Prepare
-        run: npm ci
-      - name: Lint
-        uses: mooyoul/tslint-actions@master
+      - name: Check for tickets
+        uses: mooyoul/melon-ticket-actions@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: '*.ts'
-      - name: Build
-        run: npm run build
-      - name: Publish
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: npx semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # 아래 3개 값은 멜론티켓 페이지 URL에서 찾을 수 있습니다.
+          # 예: https://ticket.melon.com/performance/index.htm?prodId=204755
+          #    prodId = 204755
+          product-id: "211942"
+          schedule-id: "10007"
+          slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # 슬랙 알림 메시지 커스터마이징 (선택 사항)
+          message: '취소표가 나왔습니다! 서둘러 확인하세요. 🏃‍♀️'
