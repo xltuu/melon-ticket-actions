@@ -15,3 +15,27 @@ jobs:
           seat-id: 1_0
           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           message: '<@U4CF18RKL> 티켓사세요'
+
+name: Check Melon Ticket
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # 5분마다 실행
+
+jobs:
+  check-tickets: # job의 이름을 더 명확하게 변경
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy: # 👈 1. strategy(전략) 블록 추가
+      matrix:
+        schedule-id: ["100078", "100079", "100080", "100081", "100082", "100083", "100084", "100085", "100086", "100087", "100088"] # 👈 2. 확인하고 싶은 모든 schedule-id를 목록으로 입력
+
+    steps:
+      - name: Check Tickets
+        uses: xltuu/melon-ticket-actions@master
+        with:
+          product-id: 211942
+          schedule-id: ${{ matrix.schedule-id }} # 👈 3. matrix에 있는 id를 하나씩 가져와 사용
+          slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: '<@U4CF18RKL> 티켓사세요! (회차: ${{ matrix.schedule-id }})' # 메시지에 어떤 회차인지 추가하면 더 좋음
