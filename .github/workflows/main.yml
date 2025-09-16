@@ -1,26 +1,8 @@
 name: example
-on:
-  schedule:
-    - cron: '*/3 * * * *' # Every 5 minutes
-jobs:
-  job:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Check Tickets
-        uses: xltuu/melon-ticket-actions@master
-        with:
-          product-id: 211942
-          schedule-id: 100078
-          seat-id: 1_0
-          slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: '<@U4CF18RKL> 티켓사세요'
-
-name: Check Melon Ticket
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # 5분마다 실행
+    - cron: '*/3 * * * *' # 5분마다 실행
 
 jobs:
   check-tickets: # job의 이름을 더 명확하게 변경
