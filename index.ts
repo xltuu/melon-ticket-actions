@@ -5,7 +5,7 @@ import * as qs from "querystring";
 
 (async () => {
   // Validate parameters
-  const [ productId, scheduleId, webhookUrl ] = [
+  const [ productId, scheduleId, seatId, webhookUrl ] = [
     "product-id",
     "schedule-id",
     "seat-id",
@@ -32,6 +32,7 @@ import * as qs from "querystring";
     data: qs.stringify({
       prodId: productId,
       scheduleNo: scheduleId,
+      seatId,
       volume: 1,
       selectedGradeVolume: 1,
     }),
