@@ -7,9 +7,10 @@ const qs = require("querystring");
 (async () => {
     var _a;
     // Validate parameters
-    const [productId, scheduleId, webhookUrl] = [
+    const [productId, scheduleId, seatId, webhookUrl] = [
         "product-id",
         "schedule-id",
+        "seat-id",
         "slack-incoming-webhook-url",
     ].map((name) => {
         const value = core.getInput(name);
@@ -29,6 +30,7 @@ const qs = require("querystring");
         data: qs.stringify({
             prodId: productId,
             scheduleNo: scheduleId,
+            seatId,
             volume: 1,
             selectedGradeVolume: 1,
         }),
