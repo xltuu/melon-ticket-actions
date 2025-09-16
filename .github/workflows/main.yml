@@ -8,7 +8,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check Tickets
-        uses: xltuu/melon-ticket-actions@main
+        uses: xltuu/melon-ticket-actions@master
         with:
           product-id: 211942
           schedule-id: 100078
