@@ -1,20 +1,17 @@
-name: Check Melon Ticket
+name: example
 on:
-  # 매 5분마다 실행하도록 스케줄 설정
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *' # Every 5 minutes
 jobs:
-  check:
+  job:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Check for tickets
-        uses: xltuu/action@master
+      - name: Check Tickets
+        uses: mooyoul/melon-ticket-actions@v1.1.0
         with:
-          # 아래 3개 값은 멜론티켓 페이지 URL에서 찾을 수 있습니다.
-          # 예: https://ticket.melon.com/performance/index.htm?prodId=204755
-          #    prodId = 204755
-          product-id: "211942"
-          schedule-id: "10007"
+          product-id: 211942
+          schedule-id: 100078
+          seat-id: NULL
           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          # 슬랙 알림 메시지 커스터마이징 (선택 사항)
-          message: '취소표가 나왔습니다! 서둘러 확인하세요. 🏃‍♀️'
+          message: '<@U4CF18RKL> 티켓사세요'
