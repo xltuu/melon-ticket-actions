@@ -8,9 +8,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check Tickets
-        uses: xltuu/melon-ticket-actions@master
+        uses: xltuu/melon-ticket-actions@xltuu-patch-1
         with:
           product-id: 211942
           schedule-id: 100078
+          seat-id: 1_0
           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           message: '<@U4CF18RKL> 티켓사세요'
