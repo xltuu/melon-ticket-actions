@@ -19,5 +19,6 @@ jobs:
         with:
           product-id: 211942
           schedule-id: ${{ matrix.schedule-id }} # 👈 3. matrix에 있는 id를 하나씩 가져와 사용
+          seat-id: 1_0
           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           message: '<@U4CF18RKL> 티켓사세요! (회차: ${{ matrix.schedule-id }})' # 메시지에 어떤 회차인지 추가하면 더 좋음
