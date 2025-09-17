@@ -13,7 +13,7 @@ jobs:
       fail-fast: false # 👈 (선택 사항) 하나의 작업이 실패해도 나머지는 계속 실행하게 함
       matrix:
         # 100067부터 100088까지의 숫자 목록을 자동으로 생성합니다.
-        schedule-id: ${{ fromJSON(format('[{0}]', join(range(100067, 100089), ','))) }}
+        schedule-id: ${{ fromJSON(format('[{0}]', join(range(100001, 100441), ','))) }}
 
     steps:
       - name: Check Tickets
