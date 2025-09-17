@@ -1,26 +1,76 @@
+# name: example
+
+# on:
+#   schedule:
+#     - cron: '*/5 * * * *' # 5분마다 실행
+
+# jobs:
+#   check-tickets: # job의 이름을 더 명확하게 변경
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 5
+
+#     strategy: # 👈 1. strategy(전략) 블록 추가
+#       fail-fast: false # 👈 (선택 사항) 하나의 작업이 실패해도 나머지는 계속 실행하게 함
+#       matrix:
+#         # 100067부터 100088까지의 숫자 목록을 자동으로 생성합니다.
+#         schedule-id: ${{ fromJSON(format('[{0}]', join(range(100001, 100441), ','))) }}
+
+#     steps:
+#       - name: Check Tickets
+#         uses: xltuu/melon-ticket-actions@master
+#         with:
+#           product-id: 211942
+#           schedule-id: ${{ matrix.schedule-id }} # 👈 3. matrix에 있는 id를 하나씩 가져와 사용
+#           seat-id: 1_0
+#           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           message: '<@U4CF18RKL> 티켓사세요! (회차: ${{ matrix.schedule-id }})' # 메시지에 어떤 회차인지 추가하면 더 좋음
+
+
 name: example
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # 5분마다 실행
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 jobs:
-  check-tickets: # job의 이름을 더 명확하게 변경
+  # ----------------------------------------------------
+  # 1. schedule-id 목록을 생성하는 첫 번째 작업
+  # ----------------------------------------------------
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      # 이 작업의 결과물(output)을 'matrix'라는 이름으로 정의
+      matrix: ${{ steps.set_matrix.outputs.schedule-id }}
+    
+    steps:
+    - id: set_matrix # 이 스텝의 ID
+      name: Generate schedule-id list
+      # 셸 스크립트를 이용해 100088부터 100441까지의 숫자 목록을 JSON 배열 형태로 생성
+      run: |
+        echo "schedule-id=$(jq -c -n 'range(100001; 100441)')" >> $GITHUB_OUTPUT
+
+  # ----------------------------------------------------
+  # 2. 생성된 목록으로 티켓을 확인하는 두 번째 작업
+  # ----------------------------------------------------
+  check-tickets:
+    # 'generate-matrix' 작업이 끝나야 이 작업이 시작됨
+    needs: generate-matrix
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    strategy: # 👈 1. strategy(전략) 블록 추가
-      fail-fast: false # 👈 (선택 사항) 하나의 작업이 실패해도 나머지는 계속 실행하게 함
+    strategy:
+      fail-fast: false
       matrix:
-        # 100067부터 100088까지의 숫자 목록을 자동으로 생성합니다.
-        schedule-id: ${{ fromJSON(format('[{0}]', join(range(100001, 100441), ','))) }}
+        # generate-matrix 작업의 결과물(outputs.matrix)을 schedule-id 목록으로 사용
+        schedule-id: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
 
     steps:
       - name: Check Tickets
         uses: xltuu/melon-ticket-actions@master
         with:
           product-id: 211942
-          schedule-id: ${{ matrix.schedule-id }} # 👈 3. matrix에 있는 id를 하나씩 가져와 사용
-          seat-id: 1_0
+          schedule-id: ${{ matrix.schedule-id }}
+          seat-id: "1_0"
           slack-incoming-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: '<@U4CF18RKL> 티켓사세요! (회차: ${{ matrix.schedule-id }})' # 메시지에 어떤 회차인지 추가하면 더 좋음
+          message: '<@U4CF18RKL> 티켓사세요! (회차: ${{ matrix.schedule-id }})'
