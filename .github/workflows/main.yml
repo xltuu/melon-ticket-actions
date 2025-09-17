@@ -48,7 +48,7 @@ jobs:
       name: Generate schedule-id list
       # 셸 스크립트를 이용해 100088부터 100441까지의 숫자 목록을 JSON 배열 형태로 생성
       run: |
-        echo "schedule-id=$(jq -c -n 'range(100001, 100441)')" >> $GITHUB_OUTPUT
+        echo "schedule-id=$(jq -c -n 'range(100001, 100440 + 1)')" >> $GITHUB_OUTPUT
 
   # ----------------------------------------------------
   # 2. 생성된 목록으로 티켓을 확인하는 두 번째 작업
