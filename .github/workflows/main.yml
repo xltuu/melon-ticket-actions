@@ -40,21 +40,21 @@ jobs:
   generate-matrix:
     runs-on: ubuntu-latest
     outputs:
-      # 이 작업의 결과물(output)을 'matrix'라는 이름으로 정의
-      matrix: ${{ steps.set_matrix.outputs.schedule-id }}
+      # 👇 1. 작업 결과물의 이름을 'matrix_json'으로 변경
+      matrix_json: ${{ steps.set_matrix.outputs.id_list }}
     
     steps:
-    - id: set_matrix # 이 스텝의 ID
+    - id: set_matrix
       name: Generate schedule-id list
-      # 셸 스크립트를 이용해 100088부터 100441까지의 숫자 목록을 JSON 배열 형태로 생성
       run: |
-        echo "schedule-id: $(jq -c -n 'range(100001, 100440 + 1)')" >> $GITHUB_OUTPUT
+        # 👇 2. 스텝 결과물의 이름도 하이픈 없는 'id_list'로 변경
+        # 👇 3. range의 마지막 숫자에 +1을 해야 해당 숫자까지 포함됩니다.
+        echo "id_list=$(jq -c -n 'range(100001, 100441 + 1)')" >> $GITHUB_OUTPUT
 
   # ----------------------------------------------------
   # 2. 생성된 목록으로 티켓을 확인하는 두 번째 작업
   # ----------------------------------------------------
   check-tickets:
-    # 'generate-matrix' 작업이 끝나야 이 작업이 시작됨
     needs: generate-matrix
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -62,8 +62,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # generate-matrix 작업의 결과물(outputs.matrix)을 schedule-id 목록으로 사용
-        schedule-id: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+        # 👇 4. 위에서 변경한 결과물 이름(matrix_json)을 가져와 사용
+        schedule-id: ${{ fromJSON(needs.generate-matrix.outputs.matrix_json) }}
 
     steps:
       - name: Check Tickets
