@@ -69,8 +69,8 @@ jobs:
       name: Generate schedule-id lists
       run: |
         # jq의 배열 슬라이싱을 이용해 전체 목록을 두 개로 나눕니다.
-        echo "id_list_1=$(jq -c -n '[range(100001; 100441 + 1)] | .[0:220]')" >> $GITHUB_OUTPUT
-        echo "id_list_2=$(jq -c -n '[range(100001; 100441 + 1)] | .[220:]')" >> $GITHUB_OUTPUT
+        echo "id_list_1=$(jq -c -n '[range(100001; 100440 + 1)] | .[0:220]')" >> $GITHUB_OUTPUT
+        echo "id_list_2=$(jq -c -n '[range(100001; 100440 + 1)] | .[220:]')" >> $GITHUB_OUTPUT
 
   # ----------------------------------------------------
   # 2. 첫 번째 목록으로 티켓을 확인하는 작업
